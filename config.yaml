@@ -1,0 +1,15 @@
+#
+# YAML Config file for sat6cmd
+#
+
+# Application config items
+application:
+   prompt: "sat6cmd>"
+   instpath: "./"
+
+# Connection config items
+connection:
+   host: "https://satellite.example.com"
+   user: "admin"
+   pass: "smartvm"
+   verify_ssl: false
