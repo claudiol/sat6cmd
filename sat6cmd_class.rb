@@ -25,6 +25,8 @@ load 'lib/Basic.rb'
 load 'lib/ActivationKeys.rb'
 load 'lib/Architectures.rb'
 load 'lib/Audits.rb'
+load 'lib/Autosign.rb'
+load 'lib/Bookmarks.rb'
 load 'lib/Locations.rb'
 load 'lib/Ldap.rb'
 load 'lib/Media.rb'
@@ -56,6 +58,14 @@ class Sat6Cmd
             
             'auditlist',
             'auditlistbyhost',
+            
+            'autosignlist',
+            
+            'bookmarklist',
+            'bookmarkshow',
+            'bookmarkcreate',
+            'bookmarkupdate',
+            'bookmarkdelete',
             
             'ldaplist',
             'ldapshow',
@@ -111,6 +121,7 @@ class Sat6Cmd
         ['showstatus','Show status'],
         ['listkeys','List activation keys'],
         
+         
         ['archlist', 'List architectures'],
         ['archshow', 'Show an architecture'],
         ['archcreate', 'Create an architecture'],
@@ -119,6 +130,14 @@ class Sat6Cmd
         
         ['auditlist', 'List all audits'],
         ['auditlistbyhost', 'List all audits for a given host'],
+        
+        ['autosignlist', 'List all autosign'],
+        
+        ['bookmarklist', 'List bookmarks'],
+        ['bookmarkshow', 'Show a bookmark'],
+        ['bookmarkcreate', 'Create an bookmark'],
+        ['bookmarkupdate', 'Update a bookmark'],
+        ['bookmarkdelete', 'Delete a bookmark'],
         
         ['ldaplist', 'List LDAP sources'],
         ['ldapshow', 'Show an LDAP source'],
@@ -184,6 +203,8 @@ class Sat6Cmd
     @activationKeys = ActivationKeys.new
     @arch = Architectures.new
     @audit = Audits.new
+    @auto = Autosign.new
+    @book = Bookmarks.new
     @ldap = Ldap.new
     @locations = Locations.new
     @media = Media.new
@@ -287,6 +308,20 @@ class Sat6Cmd
           @audit.listall(run_arguments,true)
         when "auditlistbyhost"
           @audit.listallauditsbyhost(run_arguments,true)
+          
+        when "autosignlist"
+          @auto.listall(run_arguments,true)
+          
+        when "bookmarklist"
+          @book.listall(run_arguments, true)
+        when "bookmarkshow"
+          @book.show(run_arguments, true)
+        when "bookmarkcreate"
+          @book.create(run_arguments, true)
+        when "bookmarkupdate"
+          @book.update(run_arguments, true)
+        when "bookmarkdelete"
+          @book.delete(run_arguments, true)  
           
         when "ldaplist"
           @ldap.listall(run_arguments, true)

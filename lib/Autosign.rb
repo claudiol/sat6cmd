@@ -20,43 +20,31 @@
 #
 #####################################################################################
 
-class Audits
+class Autosign
   
   def initialize
     @client = SatelliteConnection.instance
   end
 
+  
   def listall(args, output=false)
     
-    data = @client.get("/api/#{@client.api_version}/audits",nil)
-
-    if output
-      puts JSON.pretty_generate(data)
-    end
-    
-  end
-  
-  def listallauditsbyhost(args, output=false)
-    
-    data = nil
     
     if (args['id'].nil?)
-      puts "auditbyhost requires an argument --id of type integer"
+      puts "autosignlist requires an argument --id of type integer"
       return
     else
       id = args.delete('id')
-      data = @client.get("/api/#{@client.api_version}/hosts/#{id}/audits",nil)
+      data = @client.get("/api/#{@client.api_version}/smart_proxies/#{id}/autosign",nil)
     end
 
-    if output && !data.nil?
+    if output
       puts JSON.pretty_generate(data)
     end
     
     if !data.nil?
       return data
     end
-      
-    
   end
   
 end
