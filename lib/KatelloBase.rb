@@ -22,8 +22,11 @@
 
 load 'lib/Base.rb'
 
-class Media < Base
-  def initialize
-    super("media")
+class KatelloBase < Base
+  
+  def initialize(name)
+    super(name)
+    @baseurl="/katello/api/"+@client.api_version
   end
+  
 end

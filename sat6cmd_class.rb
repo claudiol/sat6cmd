@@ -26,6 +26,8 @@ load 'lib/ActivationKeys.rb'
 load 'lib/Locations.rb'
 load 'lib/Media.rb'
 load 'lib/Models.rb'
+load 'lib/OperatingSystems.rb'
+load 'lib/Organizations.rb'
 
 require 'readline'
 require 'rubygems'
@@ -57,6 +59,23 @@ class Sat6Cmd
             'modelcreate',
             'modelupdate',
             'modeldelete',
+            'oslist',
+            'osshow',
+            'oscreate',
+            'osupdate',
+            'osdelete',
+            'osbootfilelist',
+            
+            'orglist',
+            'orgshow',
+            'orgcreate',
+            'orgupdate',
+            'orgdelete',
+            'orgrepodiscover',
+            'orgcancelrepodiscover',
+            'orgdownloaddebugcert',
+            'orgautoattach',
+            
             'listkeys',
             'version',
             'help',
@@ -79,11 +98,26 @@ class Sat6Cmd
         ['mediaupdate', 'Update a medium'],
         ['mediadelete', 'Delete a medium'],
         ['modellist', 'List models'],
-        ['modelhow', 'Show a model'],
+        ['modelshow', 'Show a model'],
         ['modelcreate', 'Create a model'],
         ['modelupdate', 'Update a model'],
         ['modeldelete', 'Delete a model'],
+        ['oslist', 'List operating systems'],
+        ['osshow', 'Show an OS'],
+        ['oscreate', 'Create an OS'],
+        ['osupdate', 'Update an OS'],
+        ['osdelete', 'Delete an OS'],
+        ['osbootfilelist', 'List boot files for an operating system'],
+        ['orglist', 'List organizations'],
+        ['orgshow', 'Show an organization'],
+        ['orgcreate', 'Create an organization'],
+        ['orgupdate', 'Update an organization'],
+        ['orgdelete', 'Delete an organization'],
         ['version', 'Get the Satellite 6 Version'],
+        ['orgrepodiscover', 'Discover repositories'],
+        ['orgcancelrepodiscover', 'Cancel repository discovery'],
+        ['orgdownloaddebugcert', 'Download a debug certificate'],
+        ['orgautoattach', 'Auto-attach available subscriptions to all systems within an organization'],
         ['help [cmd]', 'Help me please!'],
         ['exit', 'Get me out of here!'],
         ['quit', 'I want to quit! Get me out of here!']
@@ -115,6 +149,8 @@ class Sat6Cmd
     @locations = Locations.new
     @media = Media.new
     @model = Models.new
+    @os = OperatingSystems.new
+    @org = Organizations.new
     
   end
 
@@ -196,38 +232,74 @@ class Sat6Cmd
            
         when "listkeys"
           @activationKeys.listall(run_arguments, true)
+          
         when "locationlist"
           @locations.listall(run_arguments, true)
         when "locationshow"
-          @locations.showlocation(run_arguments, true)
+          @locations.show(run_arguments, true)
         when "locationcreate"
-          @locations.createlocation(run_arguments, true)
+          @locations.create(run_arguments, true)
         when "locationupdate"
-          @locations.updatelocation(run_arguments, true)
+          @locations.update(run_arguments, true)
         when "locationdelete"
-          @locations.deletelocation(run_arguments, true)
+          @locations.delete(run_arguments, true)
           
         when "medialist"
           @media.listall(run_arguments, true)
         when "mediashow"
-          @media.showmedia(run_arguments, true)
+          @media.show(run_arguments, true)
         when "mediacreate"
-          @media.createmedia(run_arguments, true)
+          @media.create(run_arguments, true)
         when "mediaupdate"
-          @media.updatemedia(run_arguments, true)
+          @media.update(run_arguments, true)
         when "mediadelete"
-          @media.deletemedia(run_arguments, true)  
+          @media.delete(run_arguments, true)  
           
         when "modellist"
           @model.listall(run_arguments, true)
         when "modelshow"
-          @model.showmodel(run_arguments, true)
+          @model.show(run_arguments, true)
         when "modelcreate"
-          @model.createmodel(run_arguments, true)
+          @model.create(run_arguments, true)
         when "modelupdate"
-          @model.updatemodel(run_arguments, true)
+          @model.update(run_arguments, true)
         when "modeldelete"
-          @model.deletemodel(run_arguments, true)  
+          @model.delete(run_arguments, true)  
+          
+        when "oslist"
+          @os.listall(run_arguments, true)
+        when "osshow"
+          @os.show(run_arguments, true)
+        when "oscreate"
+          @os.create(run_arguments, true)
+        when "osupdate"
+          @os.update(run_arguments, true)
+        when "osdelete"
+          @os.delete(run_arguments, true)  
+        when "oslistbootfiles"
+          @os.listbootfiles(run_arguments, true) 
+          
+        when "orglist"
+          @org.listall(run_arguments, true)
+        when "orgshow"
+          @org.show(run_arguments, true)
+        when "orgcreate"
+          @org.create(run_arguments, true)
+        when "orgupdate"
+          @org.update(run_arguments, true)
+        when "orgdelete"
+          @org.delete(run_arguments, true)  
+        when "orglistbootfiles"
+          @org.listbootfiles(run_arguments, true) 
+          
+        when "orgrepodiscover"
+          @org.repodiscover(run_arguments, true)
+        when "orgcancelrepodiscover"
+          @org.cancelrepodiscover(run_arguments, true)
+        when "orgdownloaddebugcert"
+          @org.downloaddebugcert(run_arguments,true)
+        when "orgautoattach"
+          @org.autoattachsubs(run_arguments,true)
           
         when "quit", "QUIT"
           self.quit

@@ -22,8 +22,30 @@
 
 load 'lib/Base.rb'
 
-class Media < Base
+class OperatingSystems < Base
   def initialize
-    super("media")
+    super("operatingsystems")
   end
+  
+  def listbootfiles(args, output=false)
+    data = nil
+    
+    args = cleanargs(args)
+    puts args.inspect
+    
+    if (args['id'].nil?)
+      puts "osbootfilelist requires an argument --id of type integer"
+      return
+    else
+      id = args.delete('id')
+      data = @client.get("#{@baseurl}/#{@name}/#{id}/bootfiles",args)
+    end
+    
+    if !data.nil? && output
+      puts JSON.pretty_generate(data)
+    end
+    
+    return data
+    
+  end  
 end
