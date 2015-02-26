@@ -23,7 +23,10 @@
 load 'lib/SatelliteConnection.rb'
 load 'lib/Basic.rb'
 load 'lib/ActivationKeys.rb'
+load 'lib/Architectures.rb'
+load 'lib/Audits.rb'
 load 'lib/Locations.rb'
+load 'lib/Ldap.rb'
 load 'lib/Media.rb'
 load 'lib/Models.rb'
 load 'lib/OperatingSystems.rb'
@@ -44,21 +47,40 @@ class Sat6Cmd
     @LIST = ['showapi',
             'showkatelloapi',
             'showstatus',
+            
+            'archlist',
+            'archshow',
+            'archcreate',
+            'archupdate',
+            'archdelete',
+            
+            'auditlist',
+            'auditlistbyhost',
+            
+            'ldaplist',
+            'ldapshow',
+            'ldapcreate',
+            'ldapupdate',
+            'ldapdelete',
+            
             'locationlist',
             'locationshow',
             'locationcreate',
             'locationupdate',
             'locationdelete',
+            
             'medialist',
             'mediashow',
             'mediacreate',
             'mediaupdate',
             'mediadelete',
+            
             'modellist',
             'modelshow',
             'modelcreate',
             'modelupdate',
             'modeldelete',
+            
             'oslist',
             'osshow',
             'oscreate',
@@ -75,6 +97,7 @@ class Sat6Cmd
             'orgcancelrepodiscover',
             'orgdownloaddebugcert',
             'orgautoattach',
+            'orglistresources',
             
             'listkeys',
             'version',
@@ -87,11 +110,28 @@ class Sat6Cmd
         ['showkatelloapi', 'Get the Katello REST API'],
         ['showstatus','Show status'],
         ['listkeys','List activation keys'],
+        
+        ['archlist', 'List architectures'],
+        ['archshow', 'Show an architecture'],
+        ['archcreate', 'Create an architecture'],
+        ['archupdate', 'Update an architecture'],
+        ['archdelete', 'Delete an architecture'],
+        
+        ['auditlist', 'List all audits'],
+        ['auditlistbyhost', 'List all audits for a given host'],
+        
+        ['ldaplist', 'List LDAP sources'],
+        ['ldapshow', 'Show an LDAP source'],
+        ['ldapcreate', 'Create an LDAP source'],
+        ['ldapupdate', 'Update an LDAP source'],
+        ['ldapdelete', 'Delete an LDAP source'],
+        
         ['locationlist', 'List locations'],
         ['locationshow', 'Show a location'],
         ['locationcreate', 'Create a location'],
         ['locationupdate', 'Update a location'],
         ['locationdelete', 'Delete a location'],
+        
         ['medialist', 'List media'],
         ['mediashow', 'Show a medium'],
         ['mediacreate', 'Create a medium'],
@@ -113,11 +153,13 @@ class Sat6Cmd
         ['orgcreate', 'Create an organization'],
         ['orgupdate', 'Update an organization'],
         ['orgdelete', 'Delete an organization'],
+        ['orgdelete', 'Delete an organization'],
         ['version', 'Get the Satellite 6 Version'],
         ['orgrepodiscover', 'Discover repositories'],
         ['orgcancelrepodiscover', 'Cancel repository discovery'],
         ['orgdownloaddebugcert', 'Download a debug certificate'],
         ['orgautoattach', 'Auto-attach available subscriptions to all systems within an organization'],
+        ['orglistresources','List all resources for an organization'],
         ['help [cmd]', 'Help me please!'],
         ['exit', 'Get me out of here!'],
         ['quit', 'I want to quit! Get me out of here!']
@@ -135,17 +177,14 @@ class Sat6Cmd
     #@client.login(@cfmehost, @cfmeport, @cfmeuser, @cfmepass)
     
     
-    #@management_sytems = ManagementSystems.new
-    #@virtualmachines = VirtualMachines.new
-    #@host = Host.new
-    #@automationreq = AutomationRequest.new
-    #@cluster = Clusters.new
-    #@datastore = DataStore.new
-    #@resourcepool = ResourcePool.new
+   
     
     
     @basic = Basic.new
     @activationKeys = ActivationKeys.new
+    @arch = Architectures.new
+    @audit = Audits.new
+    @ldap = Ldap.new
     @locations = Locations.new
     @media = Media.new
     @model = Models.new
@@ -233,6 +272,33 @@ class Sat6Cmd
         when "listkeys"
           @activationKeys.listall(run_arguments, true)
           
+        when "archlist"
+          @arch.listall(run_arguments, true)
+        when "archshow"
+          @arch.show(run_arguments, true)
+        when "archcreate"
+          @arch.create(run_arguments, true)
+        when "archupdate"
+          @arch.update(run_arguments, true)
+        when "archdelete"
+          @arch.delete(run_arguments, true)
+          
+        when "auditlist"
+          @audit.listall(run_arguments,true)
+        when "auditlistbyhost"
+          @audit.listallauditsbyhost(run_arguments,true)
+          
+        when "ldaplist"
+          @ldap.listall(run_arguments, true)
+        when "ldapshow"
+          @ldap.show(run_arguments, true)
+        when "ldapcreate"
+          @ldap.create(run_arguments, true)
+        when "ldapupdate"
+          @ldap.update(run_arguments, true)
+        when "ldapdelete"
+          @ldap.delete(run_arguments, true)
+          
         when "locationlist"
           @locations.listall(run_arguments, true)
         when "locationshow"
@@ -289,8 +355,6 @@ class Sat6Cmd
           @org.update(run_arguments, true)
         when "orgdelete"
           @org.delete(run_arguments, true)  
-        when "orglistbootfiles"
-          @org.listbootfiles(run_arguments, true) 
           
         when "orgrepodiscover"
           @org.repodiscover(run_arguments, true)
@@ -300,6 +364,8 @@ class Sat6Cmd
           @org.downloaddebugcert(run_arguments,true)
         when "orgautoattach"
           @org.autoattachsubs(run_arguments,true)
+        when "orglistresources"
+          @org.listallresources(run_arguments,true)
           
         when "quit", "QUIT"
           self.quit
