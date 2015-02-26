@@ -27,6 +27,8 @@ load 'lib/Architectures.rb'
 load 'lib/Audits.rb'
 load 'lib/Autosign.rb'
 load 'lib/Bookmarks.rb'
+load 'lib/Capsules.rb'
+load 'lib/CommonParameters.rb'
 load 'lib/Locations.rb'
 load 'lib/Ldap.rb'
 load 'lib/Media.rb'
@@ -66,6 +68,15 @@ class Sat6Cmd
             'bookmarkcreate',
             'bookmarkupdate',
             'bookmarkdelete',
+            
+            'capsulelist',
+            'capsuleshow',
+            
+            'commonparameterlist',
+            'commonparametershow',
+            'commonparametercreate',
+            'commonparamterupdate',
+            'commonparamterdelete',
             
             'ldaplist',
             'ldapshow',
@@ -139,6 +150,15 @@ class Sat6Cmd
         ['bookmarkupdate', 'Update a bookmark'],
         ['bookmarkdelete', 'Delete a bookmark'],
         
+        ['capsulelist', 'List all capsules'],
+        ['capsuleshow', 'Show a capsule'],
+        
+        ['commonparameterlist', 'List Common Parameters sources'],
+        ['commonparametershow', 'Show a common parameter'],
+        ['commonparametercreate', 'Create a common parameter'],
+        ['commonparameterupdate', 'Update a common parameter'],
+        ['commonparameterdelete', 'Delete a common parameter'],
+        
         ['ldaplist', 'List LDAP sources'],
         ['ldapshow', 'Show an LDAP source'],
         ['ldapcreate', 'Create an LDAP source'],
@@ -205,6 +225,8 @@ class Sat6Cmd
     @audit = Audits.new
     @auto = Autosign.new
     @book = Bookmarks.new
+    @capsule = Capsules.new
+    @commonparameter = CommonParameters.new
     @ldap = Ldap.new
     @locations = Locations.new
     @media = Media.new
@@ -321,8 +343,24 @@ class Sat6Cmd
         when "bookmarkupdate"
           @book.update(run_arguments, true)
         when "bookmarkdelete"
-          @book.delete(run_arguments, true)  
+          @book.delete(run_arguments, true)
           
+        when "capsulelist"
+          @capsule.listall(run_arguments, true)
+        when "capsuleshow"
+          @capsule.show(run_arguments, true)
+          
+        when "commonparameterlist"
+          @commonparameter.listall(run_arguments, true)
+        when "commonparametershow"
+          @commonparameter.show(run_arguments, true)
+        when "commonparametercreate"
+          @commonparameter.create(run_arguments, true)
+        when "commonparameterupdate"
+          @commonparameter.update(run_arguments, true)
+        when "commonparameterdelete"
+          @commonparameter.delete(run_arguments, true)
+                   
         when "ldaplist"
           @ldap.listall(run_arguments, true)
         when "ldapshow"

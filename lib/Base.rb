@@ -29,6 +29,10 @@ class Base
     @name = name
   end
   
+  def setup(user, pass, host, verify_ssl)
+    @client.setup(@user, @pass, @host, @verify_ssl)
+  end
+  
   def listall(args, output=false)
     data = nil
     
