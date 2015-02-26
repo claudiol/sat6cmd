@@ -115,6 +115,28 @@ class Organizations < KatelloBase
     return data
     
   end  
+  
+  def listallresources(args, output=false)
+    data = nil
+    
+    args = cleanargs(args)
+    puts args.inspect
+    
+    if (args['id'].nil?)
+      puts "orgdownloaddebugcert requires an argument --id of type integer"
+      return
+    else
+      id = args.delete('id')
+      data = @client.get("#{@baseurl}/#{@name}/#{id}/redhat_provider",args)
+    end
+    
+    if !data.nil? && output
+      puts JSON.pretty_generate(data)
+    end
+    
+    return data
+    
+  end  
      
   
 end
