@@ -24,6 +24,8 @@ load 'lib/SatelliteConnection.rb'
 load 'lib/Basic.rb'
 load 'lib/ActivationKeys.rb'
 load 'lib/Locations.rb'
+load 'lib/Media.rb'
+load 'lib/Models.rb'
 
 require 'readline'
 require 'rubygems'
@@ -45,6 +47,16 @@ class Sat6Cmd
             'locationcreate',
             'locationupdate',
             'locationdelete',
+            'medialist',
+            'mediashow',
+            'mediacreate',
+            'mediaupdate',
+            'mediadelete',
+            'modellist',
+            'modelshow',
+            'modelcreate',
+            'modelupdate',
+            'modeldelete',
             'listkeys',
             'version',
             'help',
@@ -61,6 +73,16 @@ class Sat6Cmd
         ['locationcreate', 'Create a location'],
         ['locationupdate', 'Update a location'],
         ['locationdelete', 'Delete a location'],
+        ['medialist', 'List media'],
+        ['mediashow', 'Show a medium'],
+        ['mediacreate', 'Create a medium'],
+        ['mediaupdate', 'Update a medium'],
+        ['mediadelete', 'Delete a medium'],
+        ['modellist', 'List models'],
+        ['modelhow', 'Show a model'],
+        ['modelcreate', 'Create a model'],
+        ['modelupdate', 'Update a model'],
+        ['modeldelete', 'Delete a model'],
         ['version', 'Get the Satellite 6 Version'],
         ['help [cmd]', 'Help me please!'],
         ['exit', 'Get me out of here!'],
@@ -91,6 +113,8 @@ class Sat6Cmd
     @basic = Basic.new
     @activationKeys = ActivationKeys.new
     @locations = Locations.new
+    @media = Media.new
+    @model = Models.new
     
   end
 
@@ -169,6 +193,7 @@ class Sat6Cmd
            @basic.showkatelloapi(run_arguments, true)
         when "showstatus"
            @basic.showstatus(run_arguments, true)
+           
         when "listkeys"
           @activationKeys.listall(run_arguments, true)
         when "locationlist"
@@ -181,6 +206,29 @@ class Sat6Cmd
           @locations.updatelocation(run_arguments, true)
         when "locationdelete"
           @locations.deletelocation(run_arguments, true)
+          
+        when "medialist"
+          @media.listall(run_arguments, true)
+        when "mediashow"
+          @media.showmedia(run_arguments, true)
+        when "mediacreate"
+          @media.createmedia(run_arguments, true)
+        when "mediaupdate"
+          @media.updatemedia(run_arguments, true)
+        when "mediadelete"
+          @media.deletemedia(run_arguments, true)  
+          
+        when "modellist"
+          @model.listall(run_arguments, true)
+        when "modelshow"
+          @model.showmodel(run_arguments, true)
+        when "modelcreate"
+          @model.createmodel(run_arguments, true)
+        when "modelupdate"
+          @model.updatemodel(run_arguments, true)
+        when "modeldelete"
+          @model.deletemodel(run_arguments, true)  
+          
         when "quit", "QUIT"
           self.quit
         when "exit", "EXIT"

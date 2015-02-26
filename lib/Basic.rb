@@ -1,7 +1,5 @@
 #!/usr/bin/env ruby
 #####################################################################################
-#!/usr/bin/env ruby
-#####################################################################################
 # Copyright 2015 Kenneth Evensen <kenneth.evensen@redhat.com>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +28,7 @@ class Basic
 
   def showapi(args, output=false)
     
-    data = @client.call("/api/"+@client.api_version,nil)
+    data = @client.get("/api/"+@client.api_version,nil)
 
     if output
       puts JSON.pretty_generate(data)
@@ -40,7 +38,7 @@ class Basic
   
   def showkatelloapi(args, output=false)
     
-    data = @client.call("/katello/api/"+@client.api_version,nil)
+    data = @client.get("/katello/api/"+@client.api_version,nil)
     
     if output
       puts JSON.pretty_generate(data)
@@ -53,7 +51,7 @@ class Basic
       puts "This action doesn't take arguments.  Ignoring #{args}"
     end
     
-    data = @client.call("/api/"+@client.api_version+"/status",nil)
+    data = @client.get("/api/"+@client.api_version+"/status",nil)
     
     if output
       puts JSON.pretty_generate(data)

@@ -20,118 +20,116 @@
 #
 ######################################################################################
 
-class Locations
+class Media
   def initialize
     @client = SatelliteConnection.instance
   end
   
   def listall(args, output=false)
-    locations = nil
+    media = nil
     
     args = cleanargs(args)
     
     puts args.inspect
     
     if args.empty?
-      locations = @client.get("/api/"+@client.api_version+"/locations",nil)
+      media = @client.get("/api/"+@client.api_version+"/media",nil)
     else
-      locations = @client.get("/api/"+@client.api_version+"/locations",args)
+      media = @client.get("/api/"+@client.api_version+"/media",args)
     end
     
-    if !locations.nil? && output
-      puts JSON.pretty_generate(locations)
+    if !media.nil? && output
+      puts JSON.pretty_generate(media)
     end
     
-    return locations
+    return media
     
   end
   
-  def showlocation(args, output=false)
-    location = nil
+  def showmedia(args, output=false)
+    media = nil
     
     args = cleanargs(args)
     puts args.inspect
     
     if (args['id'].nil?)
-      puts "showlocations requires an argument --id of type integer"
+      puts "Usage: mediashow --id integer"
       return
     else
       id = args.delete('id')
-      location = @client.get("/api/"+@client.api_version+"/locations/"+id,args)
+      media = @client.get("/api/"+@client.api_version+"/media/"+id,args)
     end
     
-    if !location.nil? && output
-      puts JSON.pretty_generate(location)
+    if !media.nil? && output
+      puts JSON.pretty_generate(media)
     end
     
-    return location
+    return media
     
   end
   
-  def createlocation(args, output=false)
-    location = nil
+  
+  def createmedia(args, output=false)
+    media = nil
     args = cleanargs(args)
     puts args.inspect
     
-    if args['name'].nil?
-      puts "createlocation requires an argument --name of type string"
+    if args['name'].nil? || args['path'].nil?
+      puts "Usage: mediacreate --name medianame --path pathtomediasource [--os_family AIX|Archlinux|Debian|Freebsd|Gentoo|Junos|Redhat|Solaris|Suse|Windows]"
       return
     else
-      location = @client.post("/api/"+@client.api_version+"/locations/",args)
+      media = @client.post("/api/"+@client.api_version+"/media/",args)
     end
     
-    if !location.nil? && output
+    if !media.nil? && output
       puts JSON.pretty_generate(location)
     end
     
-    return location
+    return media
     
   end
   
-  def updatelocation(args, output=false)
+  def updatemedia(args, output=false)
+    media = nil
+    args = cleanargs(args)
+    puts args.inspect
     
-    location = nil
+    if args['name'].nil? || args['path'].nil?
+      puts "Usage: mediaupdate --id integer --name medianame --path pathtomediasource [--os_family AIX|Archlinux|Debian|Freebsd|Gentoo|Junos|Redhat|Solaris|Suse|Windows]"
+      return
+    else
+      id = args.delete('id')
+      media = @client.put("/api/"+@client.api_version+"/media/"+id,args)
+    end
+    
+    if !media.nil? && output
+      puts JSON.pretty_generate(location)
+    end
+    
+    return media
+  end
+  
+  def deletemedia(args, output=false)
+    media = nil
+    
     args = cleanargs(args)
     puts args.inspect
     
     if (args['id'].nil?)
-      puts "updatelocation requires an argument --id of type integer"
+      puts "Usage: mediadelete --id integer"
       return
     else
       id = args.delete('id')
-      location = @client.put("/api/"+@client.api_version+"/locations/"+id,args)
+      media = @client.delete("/api/"+@client.api_version+"/media/"+id,args)
     end
     
     if !location.nil? && output
-      puts JSON.pretty_generate(location)
+      puts JSON.pretty_generate(media)
     end
     
-    return location
+    return media
     
   end
-  
-  def deletelocation(args, output=false)
-    
-    location = nil
-    args = cleanargs(args)
-    puts args.inspect
-    
-    if (args['id'].nil?)
-      puts "updatelocation requires an argument --id of type integer"
-      return
-    else
-      id = args.delete('id')
-      location = @client.delete("/api/"+@client.api_version+"/locations/"+id,args)
-    end
-    
-    if !location.nil? && output
-      puts JSON.pretty_generate(location)
-    end
-    
-    return location
-    
-  end
-  
   private
   def cleanargs(args)
     sort = Hash.new
