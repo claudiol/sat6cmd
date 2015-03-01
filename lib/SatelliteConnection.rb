@@ -84,16 +84,28 @@ class SatelliteConnection
      response = nil
     puts "#{location}"
   
-    response = RestClient::Request.new(
+    if json_data.nil?
+      response = RestClient::Request.new(
         :method => :post,
         :url => @url+location,
         :user => @user,
         :verify_ssl => @verifyssl,
         :password => @password,
         :headers => { :accept => :json,
-        :content_type => :json},
-        :payload => JSON.generate(json_data)
-    ).execute
+        :content_type => :json}
+      ).execute
+    else
+      response = RestClient::Request.new(
+          :method => :post,
+          :url => @url+location,
+          :user => @user,
+          :verify_ssl => @verifyssl,
+          :password => @password,
+          :headers => { :accept => :json,
+          :content_type => :json},
+          :payload => JSON.generate(json_data)
+      ).execute
+    end
     
     if !response.nil?
       results = JSON.parse(response.to_str)
@@ -106,16 +118,28 @@ class SatelliteConnection
      response = nil
     puts "#{location}"
   
-    response = RestClient::Request.new(
-        :method => :put,
-        :url => @url+location,
-        :user => @user,
-        :verify_ssl => @verifyssl,
-        :password => @password,
-        :headers => { :accept => :json,
-        :content_type => :json},
-        :payload => JSON.generate(json_data)
-    ).execute
+    if json_data.nil?
+      response = RestClient::Request.new(
+          :method => :put,
+          :url => @url+location,
+          :user => @user,
+          :verify_ssl => @verifyssl,
+          :password => @password,
+          :headers => { :accept => :json,
+          :content_type => :json}
+      ).execute
+    else
+      response = RestClient::Request.new(
+          :method => :put,
+          :url => @url+location,
+          :user => @user,
+          :verify_ssl => @verifyssl,
+          :password => @password,
+          :headers => { :accept => :json,
+          :content_type => :json},
+          :payload => JSON.generate(json_data)
+      ).execute
+    end
     
     if !response.nil?
       results = JSON.parse(response.to_str)
@@ -133,16 +157,28 @@ class SatelliteConnection
      response = nil
     puts "#{location}"
   
-    response = RestClient::Request.new(
-        :method => :delete,
-        :url => @url+location,
-        :user => @user,
-        :verify_ssl => @verifyssl,
-        :password => @password,
-        :headers => { :accept => :json,
-        :content_type => :json},
-        :payload => JSON.generate(json_data)
-    ).execute
+    if json_data.nil?
+      response = RestClient::Request.new(
+          :method => :delete,
+          :url => @url+location,
+          :user => @user,
+          :verify_ssl => @verifyssl,
+          :password => @password,
+          :headers => { :accept => :json,
+          :content_type => :json}
+      ).execute
+    else
+      response = RestClient::Request.new(
+          :method => :delete,
+          :url => @url+location,
+          :user => @user,
+          :verify_ssl => @verifyssl,
+          :password => @password,
+          :headers => { :accept => :json,
+          :content_type => :json},
+          :payload => JSON.generate(json_data)
+      ).execute
+    end
     
     if !response.nil?
       results = JSON.parse(response.to_str)

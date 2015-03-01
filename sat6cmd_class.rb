@@ -303,6 +303,10 @@ class Sat6Cmd
   end
   
   def handle_call(run_method, run_arguments)
+    
+    run_arguments = cleanargs(run_arguments)
+    puts run_arguments.inspect
+    
     begin
       case run_method
         when "showapi"
@@ -456,6 +460,33 @@ class Sat6Cmd
       puts "Exception: " << exception.message
       return    
      end
+  end
+  
+  def cleanargs(args)
+    sort = Hash.new
+    
+    args.keys.each do |k|
+      if(k[0,2] == '--')
+          args[k[2, k.length - 1]] = args[k]
+          args.delete(k)
+      end
+    end
+    
+    if !args['sortby'].nil?
+      sort["by"] = args["sortby"]
+      args.delete("sortby")
+    end
+    
+    if !args['sortorder'].nil?
+      sort["order"] = args["sortorder"]
+      args.delete("sortorder")
+    end
+ 
+    if !sort.empty?
+      args["sort"] = sort
+    end 
+    
+    return args
   end
       
  ########################################################################################################################
