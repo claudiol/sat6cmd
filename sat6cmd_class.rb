@@ -304,7 +304,10 @@ class Sat6Cmd
   
   def handle_call(run_method, run_arguments)
     
-    run_arguments = cleanargs(run_arguments)
+    args = cleanargs(run_arguments)
+    id = run_arguments['id'].delete
+    entityname = run_arguments['name'].delete
+    
     puts run_arguments.inspect
     
     begin
@@ -322,13 +325,13 @@ class Sat6Cmd
         when "archlist"
           @arch.listall(run_arguments, true)
         when "archshow"
-          @arch.show(run_arguments, true)
+          @arch.show(id, run_arguments, true)
         when "archcreate"
-          @arch.create(run_arguments, true)
+          @arch.create(entityname, run_arguments, true)
         when "archupdate"
-          @arch.update(run_arguments, true)
+          @arch.update(id, run_arguments, true)
         when "archdelete"
-          @arch.delete(run_arguments, true)
+          @arch.delete(id, run_arguments, true)
           
         when "auditlist"
           @audit.listall(run_arguments,true)
@@ -341,108 +344,108 @@ class Sat6Cmd
         when "bookmarklist"
           @book.listall(run_arguments, true)
         when "bookmarkshow"
-          @book.show(run_arguments, true)
+          @book.show(id, run_arguments, true)
         when "bookmarkcreate"
-          @book.create(run_arguments, true)
+          @book.create(entityname, run_arguments, true)
         when "bookmarkupdate"
-          @book.update(run_arguments, true)
+          @book.update(id, run_arguments, true)
         when "bookmarkdelete"
-          @book.delete(run_arguments, true)
+          @book.delete(id, run_arguments, true)
           
         when "capsulelist"
           @capsule.listall(run_arguments, true)
         when "capsuleshow"
-          @capsule.show(run_arguments, true)
+          @capsule.show(id, run_arguments, true)
           
         when "commonparameterlist"
           @commonparameter.listall(run_arguments, true)
         when "commonparametershow"
-          @commonparameter.show(run_arguments, true)
+          @commonparameter.show(id, run_arguments, true)
         when "commonparametercreate"
-          @commonparameter.create(run_arguments, true)
+          @commonparameter.create(entityname, run_arguments, true)
         when "commonparameterupdate"
-          @commonparameter.update(run_arguments, true)
+          @commonparameter.update(id, run_arguments, true)
         when "commonparameterdelete"
-          @commonparameter.delete(run_arguments, true)
+          @commonparameter.delete(id, run_arguments, true)
                    
         when "ldaplist"
           @ldap.listall(run_arguments, true)
         when "ldapshow"
-          @ldap.show(run_arguments, true)
+          @ldap.show(id, run_arguments, true)
         when "ldapcreate"
-          @ldap.create(run_arguments, true)
+          @ldap.create(entityname, run_arguments, true)
         when "ldapupdate"
-          @ldap.update(run_arguments, true)
+          @ldap.update(id, run_arguments, true)
         when "ldapdelete"
-          @ldap.delete(run_arguments, true)
+          @ldap.delete(id, run_arguments, true)
           
         when "locationlist"
           @locations.listall(run_arguments, true)
         when "locationshow"
-          @locations.show(run_arguments, true)
+          @locations.show(id, run_arguments, true)
         when "locationcreate"
-          @locations.create(run_arguments, true)
+          @locations.create(entityname, run_arguments, true)
         when "locationupdate"
-          @locations.update(run_arguments, true)
+          @locations.update(id, run_arguments, true)
         when "locationdelete"
-          @locations.delete(run_arguments, true)
+          @locations.delete(id, run_arguments, true)
           
         when "medialist"
           @media.listall(run_arguments, true)
         when "mediashow"
-          @media.show(run_arguments, true)
+          @media.show(id, run_arguments, true)
         when "mediacreate"
-          @media.create(run_arguments, true)
+          @media.create(entityname, run_arguments, true)
         when "mediaupdate"
-          @media.update(run_arguments, true)
+          @media.update(id, run_arguments, true)
         when "mediadelete"
-          @media.delete(run_arguments, true)  
+          @media.delete(id, run_arguments, true)  
           
         when "modellist"
           @model.listall(run_arguments, true)
         when "modelshow"
-          @model.show(run_arguments, true)
+          @model.show(id, run_arguments, true)
         when "modelcreate"
-          @model.create(run_arguments, true)
+          @model.create(entityname, run_arguments, true)
         when "modelupdate"
-          @model.update(run_arguments, true)
+          @model.update(id, run_arguments, true)
         when "modeldelete"
-          @model.delete(run_arguments, true)  
+          @model.delete(id, run_arguments, true)  
           
         when "oslist"
           @os.listall(run_arguments, true)
         when "osshow"
-          @os.show(run_arguments, true)
+          @os.show(id, run_arguments, true)
         when "oscreate"
-          @os.create(run_arguments, true)
+          @os.create(entityname, run_arguments, true)
         when "osupdate"
-          @os.update(run_arguments, true)
+          @os.update(id, run_arguments, true)
         when "osdelete"
-          @os.delete(run_arguments, true)  
+          @os.delete(id, run_arguments, true)  
         when "oslistbootfiles"
-          @os.listbootfiles(run_arguments, true) 
+          @os.listbootfiles(id, run_arguments, true) 
           
         when "orglist"
           @org.listall(run_arguments, true)
         when "orgshow"
-          @org.show(run_arguments, true)
+          @org.show(id, run_arguments, true)
         when "orgcreate"
-          @org.create(run_arguments, true)
+          @org.create(entityname, run_arguments, true)
         when "orgupdate"
-          @org.update(run_arguments, true)
+          @org.update(id, run_arguments, true)
         when "orgdelete"
-          @org.delete(run_arguments, true)  
+          @org.delete(id, run_arguments, true)  
           
         when "orgrepodiscover"
-          @org.repodiscover(run_arguments, true)
+          @org.repodiscover(id, run_arguments, true)
         when "orgcancelrepodiscover"
-          @org.cancelrepodiscover(run_arguments, true)
+          @org.cancelrepodiscover(id, run_arguments, true)
         when "orgdownloaddebugcert"
-          @org.downloaddebugcert(run_arguments,true)
+          @org.downloaddebugcert(id, run_arguments,true)
         when "orgautoattach"
-          @org.autoattachsubs(run_arguments,true)
+          @org.autoattachsubs(id, run_arguments,true)
         when "orglistresources"
-          @org.listallresources(run_arguments,true)
+          @org.listallresources(id, run_arguments,true)
           
         when "quit", "QUIT"
           self.quit

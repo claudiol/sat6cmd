@@ -54,7 +54,7 @@ class Base
   def show(id, output=false)
     data = nil
 
-    unless hostid.nil? || is_a_number(hostid)
+    unless id.nil? || is_a_number(id)
       puts "Class #{@name}: Method \"show\" requires the id argument of type integer for the entity identifier"
       return
     else

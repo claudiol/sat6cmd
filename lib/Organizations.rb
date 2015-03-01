@@ -28,17 +28,16 @@ class Organizations < KatelloBase
     super("organizations")
   end
   
-  def repodiscover(args, output=false)
+  def repodiscover(id, args, output=false)
     data = nil
     
     args = cleanargs(args)
     puts args.inspect
     
-    if (args['id'].nil?)
-      puts "orgrepodiscover requires an argument --id of type integer"
+    unless id.nil? || is_a_number(id)
+      puts "Class #{@name}: Method \"repodiscover\" requires the id argument of type integer for the entity identifier"
       return
     else
-      id = args.delete('id')
       data = @client.put("/api/"+@client.api_version+"/#{@name}/#{id}/repo_discover",args)
     end
     
@@ -50,17 +49,16 @@ class Organizations < KatelloBase
     
   end
   
-  def cancelrepodiscover(args, output=false)
+  def cancelrepodiscover(id, args, output=false)
     data = nil
     
     args = cleanargs(args)
     puts args.inspect
     
-    if (args['id'].nil?)
-      puts "orgcancelrepodiscover requires an argument --id of type integer"
+    unless id.nil? || is_a_number(id)
+      puts "Class #{@name}: Method \"cancelrepodiscover\" requires the id argument of type integer for the entity identifier"
       return
     else
-      id = args.delete('id')
       data = @client.put("#{@baseurl}/#{@name}/#{id}/cancel_repo_discover",args)
     end
     
@@ -72,17 +70,16 @@ class Organizations < KatelloBase
     
   end 
   
-  def downloaddebugcert(args, output=false)
+  def downloaddebugcert(id, args, output=false)
     data = nil
     
     args = cleanargs(args)
     puts args.inspect
     
-    if (args['id'].nil?)
-      puts "orgdownloaddebugcert requires an argument --id of type integer"
+    unless id.nil? || is_a_number(id)
+      puts "Class #{@name}: Method \"downloaddebugcert\" requires the id argument of type integer for the entity identifier"
       return
     else
-      id = args.delete('id')
       data = @client.get("#{@baseurl}/#{@name}/#{id}/download_debug_certificate",args)
     end
     
@@ -94,17 +91,16 @@ class Organizations < KatelloBase
     
   end  
   
-  def autoattachsubs(args, output=false)
+  def autoattachsubs(id, args, output=false)
     data = nil
     
     args = cleanargs(args)
     puts args.inspect
     
-    if (args['id'].nil?)
-      puts "orgautoattach requires an argument --id of type integer"
+    unless id.nil? || is_a_number(id)
+      puts "Class #{@name}: Method \"autoattachsubs\" requires the id argument of type integer for the entity identifier"
       return
     else
-      id = args.delete('id')
       data = @client.post("#{@baseurl}/#{@name}/#{id}/autoattach_subscriptions",args)
     end
     
@@ -116,17 +112,16 @@ class Organizations < KatelloBase
     
   end  
   
-  def listallresources(args, output=false)
+  def listallresources(id, args, output=false)
     data = nil
     
     args = cleanargs(args)
     puts args.inspect
     
-    if (args['id'].nil?)
-      puts "orgdownloaddebugcert requires an argument --id of type integer"
+    unless id.nil? || is_a_number(id)
+      puts "Class #{@name}: Method \"listallresources\" requires the id argument of type integer for the entity identifier"
       return
     else
-      id = args.delete('id')
       data = @client.get("#{@baseurl}/#{@name}/#{id}/redhat_provider",args)
     end
     
