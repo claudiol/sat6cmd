@@ -20,45 +20,21 @@
 #
 ######################################################################################
 
-class Base
-  
-  
-  def initialize(name)
-    @client = SatelliteConnection.instance
-    @baseurl="/api/"+@client.api_version
-    @name = name
+load 'lib/KatelloBase.rb'
+
+class CapsuleContent < KatelloBase
+  def initialize
+    super("capsules")
   end
   
-  def setup(user, pass, host, verify_ssl)
-    @client.setup(@user, @pass, @host, @verify_ssl)
-  end
-  
-  def listall(args, output=false)
-    data = nil
-    
-    if args.empty?
-      data = @client.get(@baseurl+"/"+@name,nil)
-    else
-      data = @client.get(@baseurl+"/"+@name,args)
-    end
-    
-    if !data.nil? && output
-      puts JSON.pretty_generate(data)
-    end
-    
-    return data
-    
-  end
-  
-  
-  def show(id, args, output=false)
+  def lifecycle_environments(id)
     data = nil
 
     unless id.nil? || is_a_number?(id)
-      puts "Class #{@name}: Method \"show\" requires the id argument of type integer for the entity identifier"
+      puts "Class CapsuleContent: Method \"lifecycle_environments\" requires the id argument of type integer for the entity identifier"
       return
     else
-      data = @client.get("#{@baseurl}/#{@name}/#{id}", nil)
+      data = @client.get("#{@baseurl}/#{@name}/#{id}/content/lifecycle_environments", nil)
     end
 
     if !data.nil? && output
@@ -66,69 +42,74 @@ class Base
     end
 
     return data
+  end
+  
+  def available_lifecycle_environments(id)
+    data = nil
 
-  end
-  
-  def create(entityname, args, output=false)
-    data = nil
-    
-    unless entityname.nil? && args['name'].nil?
-      puts "Class #{@name}: Method \"create\" requires a name for the entity."
-      return
-    else
-      if args['name'].nil?
-        args['name'] = entityname
-      end
-      data = @client.post("#{@baseurl}/#{@name}/", args)
-    end
-    
-    if !data.nil? && output
-      puts JSON.pretty_generate(data)
-    end
-    
-    return data
-    
-  end
-  
-  def update(id, args, output=false)
-    
-    data = nil
-    
     unless id.nil? || is_a_number?(id)
-      puts "Class #{@name}: Method \"update\" requires the id argument of type integer for the entity identifier"
+      puts "Class CapsuleContent: Method \"available_lifecycle_environments\" requires the id argument of type integer for the entity identifier"
       return
     else
-      data = @client.put("#{@baseurl}/#{@name}/#{id}",args)
+      data = @client.get("#{@baseurl}/#{@name}/#{id}/content/available_lifecycle_environments", nil)
     end
-    
+
     if !data.nil? && output
       puts JSON.pretty_generate(data)
     end
-    
+
     return data
-    
   end
   
-  def delete(id, args, output=false)
-    
+  def add_lifecycle_environment(id, args)
     data = nil
+
     unless id.nil? || is_a_number?(id)
-      puts "Class #{@name}: Method \"delete\" requires the id argument of type integer for the entity identifier"
+      puts "Class CapsuleContent: Method \"add_lifecycle_environment\" requires the id argument of type integer for the entity identifier"
       return
     else
-      data = @client.delete("#{@baseurl}/#{@name}/#{id}",args)
+      data = @client.post("#{@baseurl}/#{@name}/#{id}/content/lifecycle_environments", args)
     end
-    
+
     if !data.nil? && output
       puts JSON.pretty_generate(data)
     end
-    
+
     return data
-    
   end
   
-  private
-  def is_a_number?(s)
-    s.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
+  def remove_lifecycle_environment(id, environment_id)
+    data = nil
+
+    unless (id.nil? || is_a_number?(id)) && (environment_id.nil? || is_a_number?(environment_id))
+      puts "Class CapsuleContent: Method \"remove_lifecycle_environment\" requires the id argument of type integer for the entity identifier and environment_id for the environment identifier"
+      return
+    else
+      data = @client.delete("#{@baseurl}/#{@name}/#{id}/content/lifecycle_environments/#{environment_id}", args)
+    end
+
+    if !data.nil? && output
+      puts JSON.pretty_generate(data)
+    end
+
+    return data
   end
+
+  def sync_content(id, args)
+    data = nil
+
+    unless id.nil? || is_a_number?(id)
+      puts "Class CapsuleContent: Method \"sync_content\" requires the id argument of type integer for the entity identifier"
+      return
+    else
+      data = @client.post("#{@baseurl}/#{@name}/#{id}/content/sync", args)
+    end
+
+    if !data.nil? && output
+      puts JSON.pretty_generate(data)
+    end
+
+    return data
+  end
+  
 end

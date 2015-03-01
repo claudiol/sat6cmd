@@ -20,45 +20,21 @@
 #
 ######################################################################################
 
-class Base
-  
-  
-  def initialize(name)
-    @client = SatelliteConnection.instance
-    @baseurl="/api/"+@client.api_version
-    @name = name
+load 'lib/Base.rb'
+
+class ComputeResources < Base
+  def initialize
+    super("compute_resources")
   end
   
-  def setup(user, pass, host, verify_ssl)
-    @client.setup(@user, @pass, @host, @verify_ssl)
-  end
-  
-  def listall(args, output=false)
-    data = nil
-    
-    if args.empty?
-      data = @client.get(@baseurl+"/"+@name,nil)
-    else
-      data = @client.get(@baseurl+"/"+@name,args)
-    end
-    
-    if !data.nil? && output
-      puts JSON.pretty_generate(data)
-    end
-    
-    return data
-    
-  end
-  
-  
-  def show(id, args, output=false)
+  def list_available_images(id)
     data = nil
 
     unless id.nil? || is_a_number?(id)
-      puts "Class #{@name}: Method \"show\" requires the id argument of type integer for the entity identifier"
+      puts "Class #{@name}: Method \"list_available_images\" requires the id argument of type integer for the entity identifier"
       return
     else
-      data = @client.get("#{@baseurl}/#{@name}/#{id}", nil)
+      data = @client.get("#{@baseurl}/#{@name}/#{id}/available_images", nil)
     end
 
     if !data.nil? && output
@@ -66,69 +42,74 @@ class Base
     end
 
     return data
+  end
+  
+  def list_available_clusters(id)
+    data = nil
 
-  end
-  
-  def create(entityname, args, output=false)
-    data = nil
-    
-    unless entityname.nil? && args['name'].nil?
-      puts "Class #{@name}: Method \"create\" requires a name for the entity."
-      return
-    else
-      if args['name'].nil?
-        args['name'] = entityname
-      end
-      data = @client.post("#{@baseurl}/#{@name}/", args)
-    end
-    
-    if !data.nil? && output
-      puts JSON.pretty_generate(data)
-    end
-    
-    return data
-    
-  end
-  
-  def update(id, args, output=false)
-    
-    data = nil
-    
     unless id.nil? || is_a_number?(id)
-      puts "Class #{@name}: Method \"update\" requires the id argument of type integer for the entity identifier"
+      puts "Class #{@name}: Method \"list_available_clusters\" requires the id argument of type integer for the entity identifier"
       return
     else
-      data = @client.put("#{@baseurl}/#{@name}/#{id}",args)
+      data = @client.get("#{@baseurl}/#{@name}/#{id}/available_clusters", nil)
     end
-    
+
     if !data.nil? && output
       puts JSON.pretty_generate(data)
     end
-    
+
     return data
-    
   end
-  
-  def delete(id, args, output=false)
-    
+
+  def list_available_networks(id)
     data = nil
+
     unless id.nil? || is_a_number?(id)
-      puts "Class #{@name}: Method \"delete\" requires the id argument of type integer for the entity identifier"
+      puts "Class #{@name}: Method \"list_available_networks\" requires the id argument of type integer for the entity identifier"
       return
     else
-      data = @client.delete("#{@baseurl}/#{@name}/#{id}",args)
+      data = @client.get("#{@baseurl}/#{@name}/#{id}/available_networks", nil)
     end
-    
+
     if !data.nil? && output
       puts JSON.pretty_generate(data)
     end
-    
+
     return data
-    
   end
   
-  private
-  def is_a_number?(s)
-    s.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
+  def list_available_networks_by_cluster(id, clusterid)
+    data = nil
+
+    unless (id.nil? || is_a_number?(id)) && (clusterid.nil? || is_a_number?(clusterid))
+      puts "Class #{@name}: Method \"listavailablenetworks\" requires the id argument of type integer for the entity identifier and an argument clusterid for the cluster identifier"
+      return
+    else
+      data = @client.get("#{@baseurl}/#{@name}/#{id}/available_clusters/#{clusterid}/available_networks", nil)
+    end
+
+    if !data.nil? && output
+      puts JSON.pretty_generate(data)
+    end
+
+    return data
   end
+  
+  def list_available_storage_domains(id)
+    data = nil
+
+    unless id.nil? || is_a_number?(id)
+      puts "Class #{@name}: Method \"list_available_networks\" requires the id argument of type integer for the entity identifier"
+      return
+    else
+      data = @client.get("#{@baseurl}/#{@name}/#{id}/available_storage_domains", nil)
+    end
+
+    if !data.nil? && output
+      puts JSON.pretty_generate(data)
+    end
+
+    return data
+  end
+  
 end

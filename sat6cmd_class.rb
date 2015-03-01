@@ -304,11 +304,22 @@ class Sat6Cmd
   
   def handle_call(run_method, run_arguments)
     
-    args = cleanargs(run_arguments)
-    id = run_arguments['id'].delete
-    entityname = run_arguments['name'].delete
+
     
-    puts run_arguments.inspect
+    id = nil
+    entityname = nil
+    
+    unless run_arguments.nil? || run_arguments.empty?
+      run_arguments = cleanargs(run_arguments)
+      puts "___got here____ "
+      
+      id = run_arguments.delete("id")   
+      unless run_arguments.nil? || run_arguments.empty?
+        entityname = run_arguments.delete("name")
+      end
+      
+      puts run_arguments.inspect
+    end
     
     begin
       case run_method
