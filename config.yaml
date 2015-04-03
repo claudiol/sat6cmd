@@ -9,7 +9,7 @@ application:
 
 # Connection config items
 connection:
-   host: "https://satellite.example.com"
+   host: "https://rhic-satellite6.iad.salab.redhat.com"
    user: "admin"
-   pass: "smartvm"
+   pass: "Redhat1234!@#$"
    verify_ssl: false

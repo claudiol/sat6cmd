@@ -36,6 +36,10 @@ class Base
   def listall(args, output=false)
     data = nil
     
+    args = cleanargs(args)
+    
+    puts args.inspect
+    
     if args.empty?
       data = @client.get(@baseurl+"/"+@name,nil)
     else
@@ -50,36 +54,18 @@ class Base
     
   end
   
-  
-  def show(id, args, output=false)
-    data = nil
-
-    unless id.nil? || is_a_number?(id)
-      puts "Class #{@name}: Method \"show\" requires the id argument of type integer for the entity identifier"
-      return
-    else
-      data = @client.get("#{@baseurl}/#{@name}/#{id}", nil)
-    end
-
-    if !data.nil? && output
-      puts JSON.pretty_generate(data)
-    end
-
-    return data
-
-  end
-  
-  def create(entityname, args, output=false)
+  def show(args, output=false)
     data = nil
     
-    unless entityname.nil? && args['name'].nil?
-      puts "Class #{@name}: Method \"create\" requires a name for the entity."
+    args = cleanargs(args)
+    puts args.inspect
+    
+    if (args['id'].nil?)
+      puts "show requires an argument --id of type integer"
       return
     else
-      if args['name'].nil?
-        args['name'] = entityname
-      end
-      data = @client.post("#{@baseurl}/#{@name}/", args)
+      id = args.delete('id')
+      data = @client.get("#{@baseurl}/#{@name}/"+id,args)
     end
     
     if !data.nil? && output
@@ -90,15 +76,16 @@ class Base
     
   end
   
-  def update(id, args, output=false)
-    
+  def create(args, output=false)
     data = nil
+    args = cleanargs(args)
+    puts args.inspect
     
-    unless id.nil? || is_a_number?(id)
-      puts "Class #{@name}: Method \"update\" requires the id argument of type integer for the entity identifier"
+    if args['name'].nil?
+      puts "create requires an argument --name of type string"
       return
     else
-      data = @client.put("#{@baseurl}/#{@name}/#{id}",args)
+      data = @client.post("#{@baseurl}/#{@name}/",args)
     end
     
     if !data.nil? && output
@@ -109,14 +96,40 @@ class Base
     
   end
   
-  def delete(id, args, output=false)
+  def update(args, output=false)
     
     data = nil
-    unless id.nil? || is_a_number?(id)
-      puts "Class #{@name}: Method \"delete\" requires the id argument of type integer for the entity identifier"
+    args = cleanargs(args)
+    puts args.inspect
+    
+    if (args['id'].nil?)
+      puts "update requires an argument --id of type integer"
       return
     else
-      data = @client.delete("#{@baseurl}/#{@name}/#{id}",args)
+      id = args.delete('id')
+      data = @client.put("#{@baseurl}/#{@name}/"+id,args)
+    end
+    
+    if !data.nil? && output
+      puts JSON.pretty_generate(data)
+    end
+    
+    return data
+    
+  end
+  
+  def delete(args, output=false)
+    
+    data = nil
+    args = cleanargs(args)
+    puts args.inspect
+    
+    if (args['id'].nil?)
+      puts "delete requires an argument --id of type integer"
+      return
+    else
+      id = args.delete('id')
+      data = @client.delete("#{@baseurl}/#{@name}/"+id,args)
     end
     
     if !data.nil? && output
@@ -128,7 +141,30 @@ class Base
   end
   
   private
-  def is_a_number?(s)
-    s.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
+  def cleanargs(args)
+    sort = Hash.new
+    
+    args.keys.each do |k|
+      if(k[0,2] == '--')
+          args[k[2, k.length - 1]] = args[k]
+          args.delete(k)
+      end
+    end
+    
+    if !args['sortby'].nil?
+      sort["by"] = args["sortby"]
+      args.delete("sortby")
+    end
+    
+    if !args['sortorder'].nil?
+      sort["order"] = args["sortorder"]
+      args.delete("sortorder")
+    end
+ 
+    if !sort.empty?
+      args["sort"] = sort
+    end 
+    
+    return args
   end
 end

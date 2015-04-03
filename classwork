@@ -1,35 +1,35 @@
 5. API Entry Point --> Done
-6. Activation Keys
+6. Activation Keys --> Delete, Create, List all Keys -> Done
 7. Architectures --> Done
 8. Audits --> Done
 9. Authentication Source (LDAPs) --> Done
 10. Autosign --> Done
 11. Bookmarks --> Done
-12. Capsule content --> Done
+12. Capsule content
 13. Capsules --> Done
 14. Common Parameters --> Done
 15. Compute Attributes
-16. Compute Profiles --> Done
-17. Compute Resources --> Done
-18. Config Groups --> Done
-19. Config Templates --> Done
-20. Content Uploads --> Done
+16. Compute Profiles
+17. Compute Resources
+18. Config Groups
+19. Config Templates
+20. Content Uploads
 21. Content View Filter Rules
 22. Content View Filters
 23. Content View Puppet Modules
 24. Content View Versions
 25. Content Views
-26. Custom Information --> Done
-27. Dashboard --> Done
+26. Custom Information
+27. Dashboard
 28. Distributions
-29. Domains --> Done
-30. Environments --> Done
+29. Domains
+30. Environments
 31. Errata
 32. Fact Values
-33. Filters --> Done
+33. Filters
 34. Foreman Tasks
-35. GPG Keys --> Done
-36. Home --> Done
+35. GPG Keys
+36. Home
 37. Host Classes
 38. Host Collection Errata
 39. Host Collection Packages

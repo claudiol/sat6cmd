@@ -27,16 +27,17 @@ class OperatingSystems < Base
     super("operatingsystems")
   end
   
-  def listbootfiles(id, args, output=false)
+  def listbootfiles(args, output=false)
     data = nil
     
     args = cleanargs(args)
     puts args.inspect
     
-    unless id.nil? || is_a_number(id)
-      puts "Class #{@name}: Method \"listbootfiles\" requires the id argument of type integer for the entity identifier"
+    if (args['id'].nil?)
+      puts "osbootfilelist requires an argument --id of type integer"
       return
     else
+      id = args.delete('id')
       data = @client.get("#{@baseurl}/#{@name}/#{id}/bootfiles",args)
     end
     

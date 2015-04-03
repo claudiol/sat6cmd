@@ -82,32 +82,22 @@ class SatelliteConnection
   def post(location, json_data)
   
      response = nil
-    puts "#{location}"
+    puts "#{location} data => #{json_data}"
   
-    if json_data.nil?
-      response = RestClient::Request.new(
+    response = RestClient::Request.new(
         :method => :post,
         :url => @url+location,
         :user => @user,
         :verify_ssl => @verifyssl,
         :password => @password,
         :headers => { :accept => :json,
-        :content_type => :json}
-      ).execute
-    else
-      response = RestClient::Request.new(
-          :method => :post,
-          :url => @url+location,
-          :user => @user,
-          :verify_ssl => @verifyssl,
-          :password => @password,
-          :headers => { :accept => :json,
-          :content_type => :json},
-          :payload => JSON.generate(json_data)
-      ).execute
-    end
-    
-    if !response.nil?
+        :content_type => :json},
+        :payload => JSON.generate(json_data)
+    ).execute
+
+     puts "#{location} data => #{json_data}"
+
+     if !response.nil?
       results = JSON.parse(response.to_str)
       return results
     end
@@ -118,28 +108,16 @@ class SatelliteConnection
      response = nil
     puts "#{location}"
   
-    if json_data.nil?
-      response = RestClient::Request.new(
-          :method => :put,
-          :url => @url+location,
-          :user => @user,
-          :verify_ssl => @verifyssl,
-          :password => @password,
-          :headers => { :accept => :json,
-          :content_type => :json}
-      ).execute
-    else
-      response = RestClient::Request.new(
-          :method => :put,
-          :url => @url+location,
-          :user => @user,
-          :verify_ssl => @verifyssl,
-          :password => @password,
-          :headers => { :accept => :json,
-          :content_type => :json},
-          :payload => JSON.generate(json_data)
-      ).execute
-    end
+    response = RestClient::Request.new(
+        :method => :put,
+        :url => @url+location,
+        :user => @user,
+        :verify_ssl => @verifyssl,
+        :password => @password,
+        :headers => { :accept => :json,
+        :content_type => :json},
+        :payload => JSON.generate(json_data)
+    ).execute
     
     if !response.nil?
       results = JSON.parse(response.to_str)
@@ -154,35 +132,25 @@ class SatelliteConnection
 	
 	def delete(location, json_data)
   
-     response = nil
-    puts "#{location}"
+    response = nil
+    puts "delete #{location} #{json_data}"
   
-    if json_data.nil?
-      response = RestClient::Request.new(
-          :method => :delete,
-          :url => @url+location,
-          :user => @user,
-          :verify_ssl => @verifyssl,
-          :password => @password,
-          :headers => { :accept => :json,
-          :content_type => :json}
-      ).execute
-    else
-      response = RestClient::Request.new(
-          :method => :delete,
-          :url => @url+location,
-          :user => @user,
-          :verify_ssl => @verifyssl,
-          :password => @password,
-          :headers => { :accept => :json,
-          :content_type => :json},
-          :payload => JSON.generate(json_data)
-      ).execute
-    end
-    
+    response = RestClient::Request.new(
+        :method => :delete,
+        :url => @url+location,
+        :user => @user,
+        :verify_ssl => @verifyssl,
+        :password => @password,
+        :headers => { :accept => :json,
+        :content_type => :json},
+        :payload => JSON.generate(json_data)
+    ).execute
+
     if !response.nil?
-      results = JSON.parse(response.to_str)
-      return results
+      if !response.empty?
+        results = JSON.parse(response.to_str)
+        return results
+      end
     end
   end
   

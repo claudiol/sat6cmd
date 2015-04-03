@@ -26,7 +26,7 @@ class Audits
     @client = SatelliteConnection.instance
   end
 
-  def list_all(args, output=false)
+  def listall(args, output=false)
     
     data = @client.get("/api/#{@client.api_version}/audits",nil)
 
@@ -36,12 +36,12 @@ class Audits
     
   end
   
-  def list_all_audits_by_host(args, output=false)
+  def listallauditsbyhost(args, output=false)
     
     data = nil
     
-    unless id.nil? || is_a_number?(id)
-      puts "Class #{@name}: Method \"list_all_audits_by_host\" requires the id argument of type integer for the entity identifier"
+    if (args['id'].nil?)
+      puts "auditbyhost requires an argument --id of type integer"
       return
     else
       id = args.delete('id')

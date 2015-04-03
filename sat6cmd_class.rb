@@ -35,6 +35,7 @@ load 'lib/Media.rb'
 load 'lib/Models.rb'
 load 'lib/OperatingSystems.rb'
 load 'lib/Organizations.rb'
+load 'lib/Hosts.rb'
 
 require 'readline'
 require 'rubygems'
@@ -48,83 +49,17 @@ class Sat6Cmd
     #@evm_commands = [:api_get]
     
     @command = nil 
-    @LIST = ['showapi',
-            'showkatelloapi',
-            'showstatus',
-            
-            'archlist',
-            'archshow',
-            'archcreate',
-            'archupdate',
-            'archdelete',
-            
-            'auditlist',
-            'auditlistbyhost',
-            
-            'autosignlist',
-            
-            'bookmarklist',
-            'bookmarkshow',
-            'bookmarkcreate',
-            'bookmarkupdate',
-            'bookmarkdelete',
-            
-            'capsulelist',
-            'capsuleshow',
-            
-            'commonparameterlist',
-            'commonparametershow',
-            'commonparametercreate',
-            'commonparamterupdate',
-            'commonparamterdelete',
-            
-            'ldaplist',
-            'ldapshow',
-            'ldapcreate',
-            'ldapupdate',
-            'ldapdelete',
-            
-            'locationlist',
-            'locationshow',
-            'locationcreate',
-            'locationupdate',
-            'locationdelete',
-            
-            'medialist',
-            'mediashow',
-            'mediacreate',
-            'mediaupdate',
-            'mediadelete',
-            
-            'modellist',
-            'modelshow',
-            'modelcreate',
-            'modelupdate',
-            'modeldelete',
-            
-            'oslist',
-            'osshow',
-            'oscreate',
-            'osupdate',
-            'osdelete',
-            'osbootfilelist',
-            
-            'orglist',
-            'orgshow',
-            'orgcreate',
-            'orgupdate',
-            'orgdelete',
-            'orgrepodiscover',
-            'orgcancelrepodiscover',
-            'orgdownloaddebugcert',
-            'orgautoattach',
-            'orglistresources',
-            
-            'listkeys',
-            'version',
-            'help',
-            'exit',
-            'quit'].sort
+    @LIST = %w(showapi showkatelloapi showstatus archlist archshow archcreate archupdate
+               archdelete auditlist auditlistbyhost autosignlist bookmarklist bookmarkshow
+               bookmarkcreate bookmarkupdate bookmarkdelete capsulelist capsuleshow commonparameterlist
+               commonparametershow commonparametercreate commonparamterupdate commonparamterdelete
+               ldaplist ldapshow ldapcreate ldapupdate ldapdelete listallhosts locationlist locationshow
+               locationcreate locationupdate locationdelete medialist mediashow mediacreate mediaupdate mediadelete
+               modellist modelshow modelcreate modelupdate modeldelete oslist osshow oscreate osupdate osdelete
+               osbootfilelist orglist orgshow orgcreate orgupdate orgdelete orgrepodiscover orgcancelrepodiscover
+               orgdownloaddebugcert orgautoattach orglistresources listkeys
+               showhost createhost
+               version help exit quit).sort
             
     @list = [
         ['showapi', 'Get the REST API'],
@@ -164,7 +99,12 @@ class Sat6Cmd
         ['ldapcreate', 'Create an LDAP source'],
         ['ldapupdate', 'Update an LDAP source'],
         ['ldapdelete', 'Delete an LDAP source'],
-        
+
+        # Satellite6 Hosts API support
+        ['listallhosts', "List all hosts managed by Satellite 6"],
+        ['showhost', "Show a host by ID"],
+        ['createhost', "Create a host in Satellite 6 to provision"],
+
         ['locationlist', 'List locations'],
         ['locationshow', 'Show a location'],
         ['locationcreate', 'Create a location'],
@@ -233,6 +173,7 @@ class Sat6Cmd
     @model = Models.new
     @os = OperatingSystems.new
     @org = Organizations.new
+    @hosts = Hosts.new
     
   end
 
@@ -303,24 +244,6 @@ class Sat6Cmd
   end
   
   def handle_call(run_method, run_arguments)
-    
-
-    
-    id = nil
-    entityname = nil
-    
-    unless run_arguments.nil? || run_arguments.empty?
-      run_arguments = cleanargs(run_arguments)
-      puts "___got here____ "
-      
-      id = run_arguments.delete("id")   
-      unless run_arguments.nil? || run_arguments.empty?
-        entityname = run_arguments.delete("name")
-      end
-      
-      puts run_arguments.inspect
-    end
-    
     begin
       case run_method
         when "showapi"
@@ -329,20 +252,24 @@ class Sat6Cmd
            @basic.showkatelloapi(run_arguments, true)
         when "showstatus"
            @basic.showstatus(run_arguments, true)
-           
+
+        when "deletekey"
+          @activationKeys.deletekey(run_arguments)
+        when "createkey"
+          @activationKeys.createkey(run_arguments)
         when "listkeys"
-          @activationKeys.listall(run_arguments, true)
-          
+          puts " Count - #{run_arguments.count} listkeys being called"
+          @activationKeys.listallkeys(run_arguments)
         when "archlist"
           @arch.listall(run_arguments, true)
         when "archshow"
-          @arch.show(id, run_arguments, true)
+          @arch.show(run_arguments, true)
         when "archcreate"
-          @arch.create(entityname, run_arguments, true)
+          @arch.create(run_arguments, true)
         when "archupdate"
-          @arch.update(id, run_arguments, true)
+          @arch.update(run_arguments, true)
         when "archdelete"
-          @arch.delete(id, run_arguments, true)
+          @arch.delete(run_arguments, true)
           
         when "auditlist"
           @audit.listall(run_arguments,true)
@@ -355,109 +282,118 @@ class Sat6Cmd
         when "bookmarklist"
           @book.listall(run_arguments, true)
         when "bookmarkshow"
-          @book.show(id, run_arguments, true)
+          @book.show(run_arguments, true)
         when "bookmarkcreate"
-          @book.create(entityname, run_arguments, true)
+          @book.create(run_arguments, true)
         when "bookmarkupdate"
-          @book.update(id, run_arguments, true)
+          @book.update(run_arguments, true)
         when "bookmarkdelete"
-          @book.delete(id, run_arguments, true)
+          @book.delete(run_arguments, true)
           
         when "capsulelist"
           @capsule.listall(run_arguments, true)
         when "capsuleshow"
-          @capsule.show(id, run_arguments, true)
+          @capsule.show(run_arguments, true)
           
         when "commonparameterlist"
           @commonparameter.listall(run_arguments, true)
         when "commonparametershow"
-          @commonparameter.show(id, run_arguments, true)
+          @commonparameter.show(run_arguments, true)
         when "commonparametercreate"
-          @commonparameter.create(entityname, run_arguments, true)
+          @commonparameter.create(run_arguments, true)
         when "commonparameterupdate"
-          @commonparameter.update(id, run_arguments, true)
+          @commonparameter.update(run_arguments, true)
         when "commonparameterdelete"
-          @commonparameter.delete(id, run_arguments, true)
+          @commonparameter.delete(run_arguments, true)
                    
         when "ldaplist"
           @ldap.listall(run_arguments, true)
         when "ldapshow"
-          @ldap.show(id, run_arguments, true)
+          @ldap.show(run_arguments, true)
         when "ldapcreate"
-          @ldap.create(entityname, run_arguments, true)
+          @ldap.create(run_arguments, true)
         when "ldapupdate"
-          @ldap.update(id, run_arguments, true)
+          @ldap.update(run_arguments, true)
         when "ldapdelete"
-          @ldap.delete(id, run_arguments, true)
+          @ldap.delete(run_arguments, true)
           
         when "locationlist"
           @locations.listall(run_arguments, true)
         when "locationshow"
-          @locations.show(id, run_arguments, true)
+          @locations.show(run_arguments, true)
         when "locationcreate"
-          @locations.create(entityname, run_arguments, true)
+          @locations.create(run_arguments, true)
         when "locationupdate"
-          @locations.update(id, run_arguments, true)
+          @locations.update(run_arguments, true)
         when "locationdelete"
-          @locations.delete(id, run_arguments, true)
+          @locations.delete(run_arguments, true)
           
         when "medialist"
           @media.listall(run_arguments, true)
         when "mediashow"
-          @media.show(id, run_arguments, true)
+          @media.show(run_arguments, true)
         when "mediacreate"
-          @media.create(entityname, run_arguments, true)
+          @media.create(run_arguments, true)
         when "mediaupdate"
-          @media.update(id, run_arguments, true)
+          @media.update(run_arguments, true)
         when "mediadelete"
-          @media.delete(id, run_arguments, true)  
+          @media.delete(run_arguments, true)  
           
         when "modellist"
           @model.listall(run_arguments, true)
         when "modelshow"
-          @model.show(id, run_arguments, true)
+          @model.show(run_arguments, true)
         when "modelcreate"
-          @model.create(entityname, run_arguments, true)
+          @model.create(run_arguments, true)
         when "modelupdate"
-          @model.update(id, run_arguments, true)
+          @model.update(run_arguments, true)
         when "modeldelete"
-          @model.delete(id, run_arguments, true)  
+          @model.delete(run_arguments, true)  
           
         when "oslist"
           @os.listall(run_arguments, true)
         when "osshow"
-          @os.show(id, run_arguments, true)
+          @os.show(run_arguments, true)
         when "oscreate"
-          @os.create(entityname, run_arguments, true)
+          @os.create(run_arguments, true)
         when "osupdate"
-          @os.update(id, run_arguments, true)
+          @os.update(run_arguments, true)
         when "osdelete"
-          @os.delete(id, run_arguments, true)  
+          @os.delete(run_arguments, true)  
         when "oslistbootfiles"
-          @os.listbootfiles(id, run_arguments, true) 
+          @os.listbootfiles(run_arguments, true) 
           
         when "orglist"
           @org.listall(run_arguments, true)
         when "orgshow"
-          @org.show(id, run_arguments, true)
+          @org.show(run_arguments, true)
         when "orgcreate"
-          @org.create(entityname, run_arguments, true)
+          @org.create(run_arguments, true)
         when "orgupdate"
-          @org.update(id, run_arguments, true)
+          @org.update(run_arguments, true)
         when "orgdelete"
-          @org.delete(id, run_arguments, true)  
+          @org.delete(run_arguments, true)  
           
         when "orgrepodiscover"
-          @org.repodiscover(id, run_arguments, true)
+          @org.repodiscover(run_arguments, true)
         when "orgcancelrepodiscover"
-          @org.cancelrepodiscover(id, run_arguments, true)
+          @org.cancelrepodiscover(run_arguments, true)
         when "orgdownloaddebugcert"
-          @org.downloaddebugcert(id, run_arguments,true)
+          @org.downloaddebugcert(run_arguments,true)
         when "orgautoattach"
-          @org.autoattachsubs(id, run_arguments,true)
+          @org.autoattachsubs(run_arguments,true)
         when "orglistresources"
-          @org.listallresources(id, run_arguments,true)
-          
+          @org.listallresources(run_arguments,true)
+
+          # claudiol@redhat.com - Host API #43
+        when "listallhosts"
+          # Using the base class listall method...
+          @hosts.listall(run_arguments, true)
+        when "showhost"
+          @hosts.showhost(run_arguments, true)
+        when "createhost"
+          @hosts.createhost(run_arguments,true)
+
         when "quit", "QUIT"
           self.quit
         when "exit", "EXIT"
@@ -474,33 +410,6 @@ class Sat6Cmd
       puts "Exception: " << exception.message
       return    
      end
-  end
-  
-  def cleanargs(args)
-    sort = Hash.new
-    
-    args.keys.each do |k|
-      if(k[0,2] == '--')
-          args[k[2, k.length - 1]] = args[k]
-          args.delete(k)
-      end
-    end
-    
-    if !args['sortby'].nil?
-      sort["by"] = args["sortby"]
-      args.delete("sortby")
-    end
-    
-    if !args['sortorder'].nil?
-      sort["order"] = args["sortorder"]
-      args.delete("sortorder")
-    end
- 
-    if !sort.empty?
-      args["sort"] = sort
-    end 
-    
-    return args
   end
       
  ########################################################################################################################
