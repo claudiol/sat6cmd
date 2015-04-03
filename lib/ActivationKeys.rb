@@ -24,6 +24,9 @@ require 'json'
 
 load 'lib/Base.rb'
 
+#
+# @abstract Class ActivationKeys
+# @abstract This class handles all the REST APIs for Satellite 6 pertaining activation key creation, list, update and deletion.
 class ActivationKeys < Base
   def initialize
     super("activation_keys")
@@ -40,7 +43,7 @@ class ActivationKeys < Base
     if !args.include? '-o'
       if !args.include? '-e'
         if !args.include? '-c'
-          puts "#{@name} requires an argument of -o for organization id or -e for environment with identifier"
+          puts "#{@name} requires an argument of -o <org_id> or -e <env_id> or -c <content_view_id>"
           return
         end
       end
@@ -61,7 +64,41 @@ class ActivationKeys < Base
     return data
   end
 
+  # @!method listallkeys
+  # @param args - Arguments passed by the user. Valid argument is --id <activation_key_id>
+  # @param output - JSON data for Activation Key
+  #
 
+  def listkey(args)
+    begin
+
+      if !args.include? '--id'
+        puts "#{@name} requires an argument of --id <activation_key_id>"
+        return
+      end
+
+      key_id = "#{args['--id']}"
+
+      if key_id.nil?
+        puts "Key id cannot be nil"
+        return
+      end
+      content = {"id" => "#{key_id}"}
+      response = @client.get("/katello/api/activation_keys/#{key_id}", {}) ##"/#{args['-c']}/activation_keys",nil)
+      if !response.nil?
+        puts JSON.pretty_generate(response)
+      end
+    rescue => ex
+      puts "Exception in listkey: #{ex.message}"
+    end
+  end
+
+  # @!method createkey
+  # @param args - Arguments passed by the user. Valid arguments are -o <orgid> and -n <name>
+  #               or -c <contentviewid>
+  # @param output - JSON data for Activation Key
+  #
+  # Options:
   # organization_id True Number Organization identifier
   # name True String Plain text name
   # description False String Plain text description
@@ -74,16 +111,14 @@ class ActivationKeys < Base
   # max_content_hosts False Number Maximum number of registered content hosts
   # unlimited_content_hosts False Boolean Set if the activation key can have unlimited hosts
 
-
-
   def createkey(args)
     if !args.include? '-o'
-      puts "#{@name} requires an argument of -o for organization id and -c for name identifier"
+      puts "#{@name} requires an argument of -o for organization id and -n for name identifier"
       return
     end
 
     if !args.include? '-n'
-          puts "#{@name} requires both arguments of -o for organization id and -c for name identifier"
+          puts "#{@name} requires both arguments of -o for organization id and -n for name identifier"
           return
     end
 
@@ -103,6 +138,10 @@ class ActivationKeys < Base
 
   end
 
+  # @!method listallkeys
+  # @param args - Arguments passed by the user. Valid argument is --id <activation_key_id>
+  #
+
   def deletekey(args)
     begin
 
@@ -119,7 +158,6 @@ class ActivationKeys < Base
       end
       content = {"id" => "#{key_id}"}
       @client.delete("/katello/api/activation_keys/#{key_id}", {}) ##"/#{args['-c']}/activation_keys",nil)
-
     rescue => ex
       puts "Exception in deletekey: #{ex.message}"
     end

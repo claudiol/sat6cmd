@@ -57,7 +57,7 @@ class Sat6Cmd
                locationcreate locationupdate locationdelete medialist mediashow mediacreate mediaupdate mediadelete
                modellist modelshow modelcreate modelupdate modeldelete oslist osshow oscreate osupdate osdelete
                osbootfilelist orglist orgshow orgcreate orgupdate orgdelete orgrepodiscover orgcancelrepodiscover
-               orgdownloaddebugcert orgautoattach orglistresources listkeys
+               orgdownloaddebugcert orgautoattach orglistresources listkeys listkey createkey deletekey
                showhost createhost
                version help exit quit).sort
             
@@ -104,6 +104,13 @@ class Sat6Cmd
         ['listallhosts', "List all hosts managed by Satellite 6"],
         ['showhost', "Show a host by ID"],
         ['createhost', "Create a host in Satellite 6 to provision"],
+
+        # Satellite ActivationKey API support
+        ['listkeys', "List all keys for an Organization. Arguments are -o <ord_id> or -e <env_id> or -c <content_view_id>"],
+        ['listkey', "List a specific ActivationKey. Argument is --id <activation_key_id>"],
+        ['deletekey', "Delete a specific Activation Key. Argument is --id <activation_key_id>"],
+        ['createkey', "Create an Activation Key. Requires two arguments: -o <org_id> -n <activation key name>"],
+        ['updatekey', "Update info for an Actvation Key"],
 
         ['locationlist', 'List locations'],
         ['locationshow', 'Show a location'],
@@ -257,6 +264,8 @@ class Sat6Cmd
           @activationKeys.deletekey(run_arguments)
         when "createkey"
           @activationKeys.createkey(run_arguments)
+        when "listkey"
+          @activationKeys.listkey(run_arguments)
         when "listkeys"
           puts " Count - #{run_arguments.count} listkeys being called"
           @activationKeys.listallkeys(run_arguments)
