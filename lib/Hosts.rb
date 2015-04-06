@@ -64,22 +64,58 @@ class Hosts < Base
     s.to_s.match(/\A[+-]?\d+?(\.\d+)?\Z/) == nil ? false : true
   end
 
-  def createhost(args, output=false)
+  # @!method createhost
+  # @param args - Arguments for show host are passed by the user. Valid argument is -n <name of host>
+  # @param hostinfo - Hash that contains the following information.
+  #   #
+  #   host	False	Hash	Host subcollection
+  #   host[name]	True	String	Host name
+  #   host[environment_id]	False	String	Environment identifier
+  #   host[ip]	False	String	Host IP address. Not required if using a subnet with DHCP proxy.
+  #   host[mac]	False	String	Host MAC address. Not required if host is a virtual machine.
+  #   host[domain_id]	False	Number	Host domain identifier
+  #   host[realm_id]	False	Number	Host realm identifier
+  #   host[puppet_proxy_id]	False	Number	Host Puppet Proxy identifier
+  #   host[puppet_class_ids]	False	Array	List of Puppet Class identifiers
+  #   host[operatingsystem_id]	False	String	Host operating System identifier
+  #   host[medium_id]	False	Number	Host medium identifier
+  #   host[ptable_id]	False	Number	Host partition table identifier
+  #   host[subnet_id]	False	Number	Host subnet identifier
+  #   host[compute_resource_id]	False	Number	Host compute resource identifier
+  #   host[sp_subnet_id]	False	Number	The subnet identifier to use for the host's service processor on the baseboard management controller
+  #   host[model_id]	False	Number	Host's model identifier
+  #   host[hostgroup_id]	False	Number	Host's hostgroup identifier
+  #   host[owner_id]	False	Number	Host's owner identifier
+  #   host[puppet_ca_proxy_id]	False	Number	Host's Puppet certificate authority identifier
+  #   host[image_id]	False	Number	Host's image identifier
+  #   host[host_parameters_attributes]	False	Array	List of parameter attributes for the host
+  #   host[build]	False	Boolean	Enables build mode for the host
+  #   host[enabled]	False	Boolean	Defines if the host is included within reporting
+  #   host[provision_method]	False	String	Defines the provisioning method to use. Either build or image.
+  #   host[managed]	False	Boolean	Defines if Satellite manages the host's build cycle.
+  #   host[progress_report_id]	False	String	Progress report identifier to track orchestration tasks status
+  #   host[capabilities]	False	String	Capabilities of compute resources for host
+  #   host[compute_profile_id]	False	Number	Compute profile identifier
+  #   host[compute_attributes]	False	Hash	Subcollection of compute attributes
+  # @param output - Boolean true or false
+  #
+  def createhost(args, hostinfo={}, output=false)
     data = nil
-
-    args = cleanargs(args)
+    hostinfo = {}
     puts args.inspect
-    unless args.include? 'name'
-      puts "#{@name}:createhost method requires an argument --name of type string for the Host name"
+    unless args.include? '-n'
+      puts "#{@name}:createhost method requires an argument -n <hostname> of type string for the Host name"
       return
     else
-      hostname = args.delete('name')
+      hostname = "#{args['-n']}"
       if !hostname.nil?
-        data = @client.post("#{@baseurl}/#{@name}/", args)
+        puts "#{hostname}"
+        hostinfo['name'] = "#{hostname}"
+        puts "after"
+        data = @client.post("#{@baseurl}/#{@name}/", hostinfo)
       else
         puts "The hostname must be present."
       end
-
     end
 
     if !data.nil? && output

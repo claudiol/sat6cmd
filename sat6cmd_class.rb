@@ -162,10 +162,6 @@ class Sat6Cmd
     @client.setup(@user, @pass, @host, @verify_ssl)
     #@client.login(@cfmehost, @cfmeport, @cfmeuser, @cfmepass)
     
-    
-   
-    
-    
     @basic = Basic.new
     @activationKeys = ActivationKeys.new
     @arch = Architectures.new
